@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Your Cart - Grand Line Treasure</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+
+<style>
+.cart-container{
+  padding:20px;
+}
+
+.cart-item{
+  background:#1a1a1a;
+  padding:12px;
+  border-radius:15px;
+  margin-bottom:15px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.cart-item img{
+  width:70px;
+  height:70px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.cart-details{
+  flex:1;
+  font-size:13px;
+}
+
+.qty-control{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:5px;
+}
+
+.qty-btn{
+  background:#ff3c3c;
+  border:none;
+  color:white;
+  width:25px;
+  height:25px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.remove-btn{
+  background:#444;
+  border:none;
+  color:white;
+  padding:5px 8px;
+  border-radius:6px;
+  margin-top:5px;
+  cursor:pointer;
+}
+
+.checkout-btn{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,#ff3c3c,#ff9900);
+  border:none;
+  border-radius:12px;
+  color:white;
+  font-size:15px;
+  margin-top:15px;
+  cursor:pointer;
+}
+
+.empty-cart{
+  text-align:center;
+  margin-top:50px;
+  color:gray;
+}
+</style>
+
+</head>
+
+<body onload="loadCartPage()">
+
+<div class="navbar">
+  <div class="logo">🏴‍☠️ GRAND LINE TREASURE</div>
+  <div>
+    🛒 (<span id="cartCount">0</span>)
+  </div>
+</div>
+
+<div class="cart-container">
+
+<h2>Your Cart</h2>
+
+<div id="cartItems"></div>
+
+<h3>Total: ₹<span id="total">0</span></h3>
+
+<button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+
+</div>
+
+<script>
+function loadCartPage(){
+  let container=document.getElementById("cartItems");
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  container.innerHTML="";
+
+  document.getElementById("cartCount").innerText=cart.length;
+
+  if(cart.length===0){
+    container.innerHTML="<div class='empty-cart'>Your cart is empty</div>";
+    document.getElementById("total").innerText=0;
+    return;
+  }
+
+  let total=0;
+
+  cart.forEach((item,index)=>{
+    total+=item.price*item.qty;
+
+    container.innerHTML+=`
+      <div class="cart-item">
+        <img src="https://via.placeholder.com/150">
+        <div class="cart-details">
+          <b>${item.name}</b><br>
+          ₹${item.price}<br>
+
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${index},-1)">-</button>
+            ${item.qty}
+            <button class="qty-btn" onclick="changeQty(${index},1)">+</button>
+          </div>
+
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText=total;
+}
+
+function changeQty(index,change){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  cart[index].qty+=change;
+
+  if(cart[index].qty<=0){
+    cart.splice(index,1);
+  }
+
+  localStorage.setItem("cart",JSON.stringify(cart));
+  loadCartPage();
+}
+
+function removeItem(index){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  cart.splice(index,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  loadCartPage();
+}
+
+function goToCheckout(){
+  window.location.href="checkout.html";
+}
+</script>
+
+</body>
+</html>

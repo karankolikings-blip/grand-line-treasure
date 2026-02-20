@@ -1,0 +1,19 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>My Orders</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body onload="loadOrders()">
+
+<div class="navbar">
+<div class="logo">My Orders</div>
+<div onclick="logout()">Logout</div>
+</div>
+
+<div id="ordersList" style="padding:15px;"></div>
+
+<script type="module" src="firebase.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
